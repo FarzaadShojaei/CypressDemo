@@ -1,0 +1,31 @@
+name: Cypress Integration with CI
+on:
+ push:
+   branches: master
+jobs:
+  Test-on-chrome:
+   runs-on: windows
+   steps:
+   - name: Checkout
+     uses: actions/checkout@v3.3.0
+   - name: Install Dependecies and Adding Libraries
+     uses: cypress-io/github-actions@v5.0.8
+     with:
+       runTests: false
+   - name: Run Tests
+     uses: cypress-io/github-actions@v5.0.8
+     with:
+       command: "npm run"
+   - name: Upload Videos
+     uses: actions/uploadartifacts@v3.1.2
+     if: always()
+     with:
+       name: cypress-video-chrome
+       path: "${{github.workspace}}/cypress/videos"
+   - name: Upload Screenshots
+     uses: actions/upload-artifacts@v3.1.2
+     if: failure()
+     with:
+       name: cypress-screenshot-chrome
+       path: "${{github.workspace}}/cypress/screenshots"
+       
